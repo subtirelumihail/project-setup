@@ -1,22 +1,23 @@
-var webpack = require('webpack');
-var path    = require('path');
+import webpack from 'webpack';
+import path    from 'path';
 
 //Plugins
-var HtmlWebpackPlugin = require("html-webpack-plugin");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import ExtractTextPlugin from "extract-text-webpack-plugin";
+import WebpackNanoLogs from "webpack-nano-logs";
 
-var cssLoaderStr = [
+const cssLoaderStr = [
   "css-loader?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]",
   "postcss-loader",
   "sass-loader" + '?sourceMap&outputStyle=expanded&sourceMap=true&sourceMapContents=true'
 ].join("!");
 
-var cssLoader = ExtractTextPlugin.extract("style", cssLoaderStr);
+const cssLoader = ExtractTextPlugin.extract("style", cssLoaderStr);
 
 module.exports = {
     cache: true,
     debug: true,
-    devtool: 'source-map',
+    devtool: 'eval-source-map',
     entry: [
       './src/js/index.js'
     ],
@@ -38,6 +39,7 @@ module.exports = {
     },
     plugins: [
       new webpack.NoErrorsPlugin(),
+      WebpackNanoLogs,
       new HtmlWebpackPlugin({
         template: "./src/index.html",
         inject: 'body'

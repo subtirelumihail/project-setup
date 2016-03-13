@@ -1,34 +1,35 @@
-var webpack = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
+import webpack from 'webpack';
+import WebpackDevServer from 'webpack-dev-server';
 
-var config = require('./webpack.config');
+import config from './webpack.config.babel';
 
-var hostname = "localhost";
-var port     = 8080;
+const hostname = "localhost";
+const port     = 8080;
 
-config.plugins.unshift(new webpack.HotModuleReplacementPlugin());
+config.output.publicPath = "/";
+
 config.entry.unshift("webpack/hot/dev-server");
 config.entry.unshift("webpack-dev-server/client?http://" + hostname + ":" + port);
-config.output.publicPath = "/";
 
 new WebpackDevServer(webpack(config), {
   contentBase: config.output.path,
-  hot: true,
   historyApiFallback: true,
-  progress: true,
+  progress: false,
+  hot: true,
   inline:   true,
+  quiet: false,
+  noInfo: false,
   stats: {
-    assets: true,
+    assets: false,
     colors: true,
-		hash: false,
-		timings: true,
-		chunks: false,
-		chunkModules: false,
-		modules: false,
-    source: true,
-		children: true
+    version: true,
+    hash: false,
+    timings: true,
+    chunks: false,
+    chunkModules: false,
+    children: false
   },
-}).listen(port, 'localhost', function (err) {
+}).listen(port, 'localhost', (err) => {
   if (err) {
     console.log(err);
   }
