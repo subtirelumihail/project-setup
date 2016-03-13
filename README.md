@@ -1,13 +1,13 @@
-# How to make magic
+## How to make magic
 
-### To install:
+#### To install:
 
 `npm i`
 
-### To run:
+#### To run:
 
 `npm start`
 
-### To build:
+#### To build:
 
 `npm run build`
