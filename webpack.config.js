@@ -6,9 +6,9 @@ var HtmlWebpackPlugin = require("html-webpack-plugin");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var cssLoaderStr = [
-  "css-loader?sourceMap",
+  "css-loader?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]",
   "postcss-loader",
-  "sass-loader" + '?sourceMap&outputStyle=expanded&sourceMap=true&sourceMapContents=true&includePaths[]='+ path.resolve(__dirname, 'node_modules/bulma')
+  "sass-loader" + '?sourceMap&outputStyle=expanded&sourceMap=true&sourceMapContents=true'
 ].join("!");
 
 var cssLoader = ExtractTextPlugin.extract("style", cssLoaderStr);
@@ -39,7 +39,7 @@ module.exports = {
     plugins: [
       new webpack.NoErrorsPlugin(),
       new HtmlWebpackPlugin({
-        template: "./src/index.html", 
+        template: "./src/index.html",
         inject: 'body'
       }),
       new ExtractTextPlugin("[contenthash].css"),
