@@ -1,5 +1,9 @@
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
+import chalk from "chalk";
+
+import ProgressBarPlugin from 'progress-bar-webpack-plugin';
+import Logger from "./logger";
 
 import config from './webpack.config.babel';
 
@@ -11,6 +15,15 @@ config.output.publicPath = "/";
 config.entry.unshift("webpack/hot/dev-server");
 config.entry.unshift("webpack-dev-server/client?http://" + hostname + ":" + port);
 
+config.plugins.unshift(new Logger());
+config.plugins.unshift(
+  new ProgressBarPlugin({
+    format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:elapsed seconds)'
+  })
+);
+
+console.log(`Listening at: [ ${chalk.yellow.bold('http://localhost:' + port)} ]\n`);
+
 new WebpackDevServer(webpack(config), {
   contentBase: config.output.path,
   historyApiFallback: true,
@@ -18,13 +31,13 @@ new WebpackDevServer(webpack(config), {
   hot: true,
   inline:   true,
   quiet: false,
-  noInfo: false,
+  noInfo: true,
   stats: {
     assets: false,
     colors: true,
     version: true,
     hash: false,
-    timings: true,
+    timings: false,
     chunks: false,
     chunkModules: false,
     children: false
@@ -33,5 +46,4 @@ new WebpackDevServer(webpack(config), {
   if (err) {
     console.log(err);
   }
-  console.log('Listening at localhost:' + port);
 });

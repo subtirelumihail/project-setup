@@ -4,7 +4,7 @@ import path    from 'path';
 //Plugins
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import ExtractTextPlugin from "extract-text-webpack-plugin";
-import WebpackNanoLogs from "webpack-nano-logs";
+
 
 const cssLoaderStr = [
   "css-loader?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]",
@@ -38,8 +38,6 @@ module.exports = {
         ]
     },
     plugins: [
-      new webpack.NoErrorsPlugin(),
-      WebpackNanoLogs,
       new HtmlWebpackPlugin({
         template: "./src/index.html",
         inject: 'body'
