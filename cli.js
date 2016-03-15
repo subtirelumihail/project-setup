@@ -5,27 +5,43 @@ import {log}      from './logger';
 import config  from './config';
 const {port, hostname} =  config;
 
-export const url  = chalk.yellow.bold(`http://${hostname}:${port}`);
+export const url  = chalk.yellow.bold(`${hostname}:${port}`);
 
 export const resetTerminal = () => {
   process.stdout.write('\u001B[2J\u001B[0;0f');
   console.log(`Listening at: [ ${url} ]\n`);
 };
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  terminal: false
-});
+const rl = readline.createInterface(process.stdin, process.stdout);
+
+const commands = [
+  {
+    name: 'url',
+    description: 'Show the full url of the application'
+  },
+  {
+    name: 'port',
+    description: 'Show on which port the server listens'
+  },
+  {
+    name: 'clear',
+    description: 'Clear the terminal window'
+  },
+  {
+    name: 'help',
+    description: 'Show the help'
+  }
+];
 
 export default {
+  
   init() {
     // Reset the terminal window
     resetTerminal();
     
     //Listen to stdin input and handle action
     rl.on('line', function(line){
-        switch(line) {
+        switch(line.trim()) {
           case 'port':
             log(port);
             break;
@@ -36,13 +52,12 @@ export default {
             resetTerminal();
             break;
           case 'help':
-            console.log('Create a readline commands for the moment the following commands work:\n- url -> displays the url of the application\n- port -> displays the port number');
-            break;
+            console.log('\nThe following commands are available: \n');
+            for(let i = 0; i < commands.length; i++) {
+              console.log(` ${chalk.bold(commands[i].name)}: ${commands[i].description}`);
+            }
         }
     });
-    
-    rl.on('close', function() {
-      return process.exit(1);
-    });
+  
   }
 };
