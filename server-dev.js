@@ -1,31 +1,43 @@
-import webpack from 'webpack';
-import WebpackDevServer from 'webpack-dev-server';
-import chalk from "chalk";
+import webpack            from 'webpack';
+import chalk              from 'chalk';
+import WebpackDevServer   from 'webpack-dev-server';
+import ProgressBarPlugin  from 'progress-bar-webpack-plugin';
 
-import ProgressBarPlugin from 'progress-bar-webpack-plugin';
-import Logger from "./logger";
+// Load custom librarys
+import Logger, {log, customLogger} from './logger';
+import cli from './cli';
 
-import config from './webpack.config.babel';
+// Load configs
+import webpackConfig    from './webpack.config.babel';
+import config from './config';
+console.log('xxx',config);
 
-const hostname = "localhost";
-const port     = 8080;
+const {port, hostname} =  config;
 
-config.output.publicPath = "/";
+// Init the cli
+cli.init();
 
-config.entry.unshift("webpack/hot/dev-server");
-config.entry.unshift("webpack-dev-server/client?http://" + hostname + ":" + port);
 
-config.plugins.unshift(new Logger());
-config.plugins.unshift(
+
+// Configure webpack server
+webpackConfig.output.publicPath = '/';
+
+webpackConfig.entry.unshift('webpack/hot/dev-server');
+webpackConfig.entry.unshift('webpack-dev-server/client?http://' + hostname + ':' + port);
+
+webpackConfig.plugins.unshift(new Logger());
+webpackConfig.plugins.unshift(
   new ProgressBarPlugin({
-    format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:elapsed seconds)'
+    format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:elapsed seconds)',
+    summary: false,
+    customSummary: customLogger
   })
 );
 
-console.log(`Listening at: [ ${chalk.yellow.bold('http://localhost:' + port)} ]\n`);
+// Start webpack server
 
-new WebpackDevServer(webpack(config), {
-  contentBase: config.output.path,
+new WebpackDevServer(webpack(webpackConfig), {
+  contentBase: webpackConfig.output.path,
   historyApiFallback: true,
   progress: false,
   hot: true,
@@ -42,8 +54,8 @@ new WebpackDevServer(webpack(config), {
     chunkModules: false,
     children: false
   },
-}).listen(port, 'localhost', (err) => {
+}).listen(port, hostname, (err) => {
   if (err) {
-    console.log(err);
+    log(chalk.red(err));
   }
 });
