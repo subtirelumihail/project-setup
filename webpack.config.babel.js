@@ -1,5 +1,6 @@
-import webpack from 'webpack';
-import path    from 'path';
+import webpack      from 'webpack';
+import path         from 'path';
+import autoprefixer from 'autoprefixer';
 
 //Plugins
 import HtmlWebpackPlugin from "html-webpack-plugin";
@@ -36,6 +37,9 @@ module.exports = {
             { test: /\.(png|jpg|gif)$/, loader: 'url?limit=1048576' }, // inline base64 URLs for <=1MB images, direct URLs for the rest
             { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&minetype=image/svg+xml" }
         ]
+    },
+    postcss: () => {
+      return [autoprefixer];
     },
     plugins: [
       new HtmlWebpackPlugin({
